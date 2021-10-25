@@ -13,9 +13,19 @@
 # limitations under the License.
 
 Param(
-    #configure the interval, default is 5 and configure bigger than 5 to avoid throttling
-    $interval = 5,
+    #Instance name and zone to move 
+    $InstanceName = "client-service-japan",
+    $Zone = "asia-northeast1-b"
 
-    #change $true if you want to collect metrics per GPU core
-    [switch]$collect_each_core = $false
-)  "
+)  
+
+$config = gcloud compute instances export $InstanceName --zone=$Zone
+#$config = gcloud alpha compute instances export $InstanceName --zone=$Zone
+
+#$config.Replace("preemptible: false","preemptible: false`r`n  maintenanceInterval: PERIODIC")
+$config.Replace("automaticRestart: true","automaticRestart: false") `
+    | gcloud compute instances update-from-file $InstanceName --zone=$Zone --most-disruptive-allowed-action=RESTART
+
+
+
+
