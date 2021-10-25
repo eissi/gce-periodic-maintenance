@@ -19,12 +19,13 @@ Param(
 
 )  
 
-$config = gcloud compute instances export $InstanceName --zone=$Zone
-#$config = gcloud alpha compute instances export $InstanceName --zone=$Zone
+#$config = gcloud compute instances export $InstanceName --zone=$Zone
+$config = gcloud alpha compute instances export $InstanceName --zone=$Zone
 
-#$config.Replace("preemptible: false","preemptible: false`r`n  maintenanceInterval: PERIODIC")
-$config.Replace("automaticRestart: true","automaticRestart: false") `
+$config.Replace("preemptible: false","preemptible: false`r`n  maintenanceInterval: PERIODIC") `
     | gcloud compute instances update-from-file $InstanceName --zone=$Zone --most-disruptive-allowed-action=RESTART
+#$config.Replace("automaticRestart: true","automaticRestart: false") `
+#    | gcloud compute instances update-from-file $InstanceName --zone=$Zone --most-disruptive-allowed-action=RESTART
 
 
 
